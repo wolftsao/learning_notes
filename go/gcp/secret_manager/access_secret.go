@@ -13,7 +13,7 @@ import (
 func main() {
 	// GCP project in which to store secrets in Secret Manager.
 	// Replace the <Project ID> with your Project ID
-	projectID := "<Project ID>"
+	projectID := "devops-296503"
 
 	// Create the client.
 	ctx := context.Background()
@@ -24,7 +24,7 @@ func main() {
 
 	// Replace the <Secret Key> with you secret
 	accessSecretReq := &secretmanagerpb.AccessSecretVersionRequest{
-		Name: fmt.Sprintf("projects/%s/secrets/<Secret Key>/versions/1", projectID),
+		Name: fmt.Sprintf("projects/%s/secrets/dev_sport_redis/versions/1", projectID),
 	}
 
 	secret, err := client.AccessSecretVersion(ctx, accessSecretReq)
