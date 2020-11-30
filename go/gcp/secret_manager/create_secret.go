@@ -27,6 +27,10 @@ func main() {
 					Automatic: &secretmanagerpb.Replication_Automatic{},
 				},
 			},
+			Labels: map[string]string{
+				"<label1>": "<label1 value>",
+				"<label2>": "<label2 value>",
+			},
 		},
 	}
 	resp, err := c.CreateSecret(ctx, req)
