@@ -26,7 +26,7 @@ type SecretFile struct {
 
 func main() {
 	// replace <path to secret yaml> with the yaml file which stores the secrets
-	yamlFile, err := ioutil.ReadFile("<path to secret yaml>")
+	yamlFile, err := ioutil.ReadFile("./secrets.yml")
 	if err != nil {
 		log.Printf("yamlFile.Get err   #%v ", err)
 	}
