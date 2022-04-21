@@ -1,4 +1,4 @@
-curl -s -H "Authorization: Bearer <token>" https://gitlab.paradise-soft.com.tw/api/v4/projects/:id/repository/files/:filepath/raw?ref=:branch
+curl -s -H "Authorization: Bearer <token>" https:// <gitlab-domain >/api/v4/projects/:id/repository/files/:filepath/raw?ref=:branch
 
 # Replace below:
 # :id -> project id
