@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/json"
 	"flag"
 	"log"
 	"net/http"
@@ -44,13 +45,29 @@ func (t *templateHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	t.templ.Execute(w, data)
 }
 
+type authSecret struct {
+	GothKey            string `json:"goth_key"`
+	GoogleClientID     string `json:"google_client_id"`
+	GoogleClientSecret string `json:"google_client_secret"`
+}
+
 func main() {
 	var addr = flag.String("addr", ":8080", "The addr of the application.")
 	flag.Parse()
 
-	key := "Wolftsao-GoProgrammingBlueprints-Secret"
+	var secret authSecret
 
-	store := sessions.NewCookieStore([]byte(key))
+	secretBytes, err := os.ReadFile("secret.json")
+	if err != nil {
+		log.Fatalln("Failed to read secret file")
+	}
+
+	err = json.Unmarshal(secretBytes, &secret)
+	if err != nil {
+		log.Fatalln("Unable to unmarshal secret file")
+	}
+
+	store := sessions.NewCookieStore([]byte(secret.GothKey))
 	store.MaxAge(86400 * 30)
 	store.Options.Path = "/"
 	store.Options.HttpOnly = true
@@ -58,10 +75,8 @@ func main() {
 
 	gothic.Store = store
 
-	googleClientID := ""
-	googleClientSecret := ""
 	goth.UseProviders(
-		google.New(googleClientID, googleClientSecret, "http://localhost:8080/auth/callback/google", "email", "profile"),
+		google.New(secret.GoogleClientID, secret.GoogleClientSecret, "http://localhost:8080/auth/callback/google", "email", "profile"),
 	)
 
 	r := newRoom()
