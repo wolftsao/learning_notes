@@ -4,7 +4,7 @@ import (
 	"net/http"
 
 	"github.com/bmizerany/pat"
-	"github.com/wolftsao/learning_notes/go/internal/handlers"
+	"github.com/wolftsao/learning_notes/go/ws/internal/handlers"
 )
 
 // routes defines the application routes
