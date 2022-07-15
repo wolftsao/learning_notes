@@ -8,6 +8,7 @@ import (
 )
 
 func main() {
+	log.SetFlags(log.LstdFlags | log.Lshortfile)
 	mux := routes()
 
 	log.Println("Starting channel listener")
