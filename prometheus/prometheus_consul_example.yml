@@ -1,0 +1,64 @@
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+
+scrape_configs:
+  - job_name: "consul_sd_cockroachdb"
+    metrics_path: "/_status/vars"
+    tls_config:
+      insecure_skip_verify: true
+    consul_sd_configs:
+      - server: "localhost:8500"
+        refresh_interval: 10s
+    relabel_configs:
+      - source_labels: [__meta_consul_tags]
+        regex: ".*cockroachdb.*"
+        action: keep
+      - source_labels: [__meta_consul_tags]
+        target_label: tags
+      - regex: __meta_consul_service_metadata_(.+)
+        action: labelmap
+      - source_labels: [hostname, exporter_port]
+        regex: "(.*);(.*)"
+        replacement: "${1}:${2}"
+        target_label: instance
+      - regex: team
+        action: labeldrop
+
+  - job_name: "consul_sd_arangodb"
+    metrics_path: "/_admin/metrics"
+    basic_auth:
+      username: admin
+      password: <password>
+    tls_config:
+      insecure_skip_verify: true
+    consul_sd_configs:
+      - server: "localhost:8500"
+        refresh_interval: 10s
+    relabel_configs:
+      - source_labels: [__meta_consul_tags]
+        regex: ".*arangodb.*"
+        action: keep
+      - regex: __meta_consul_service_metadata_(.+)
+        action: labelmap
+      - source_labels: [hostname, exporter_port]
+        regex: "(.*);(.*)"
+        replacement: "${1}:${2}"
+        target_label: instance
+
+  - job_name: "consul_sd_default"
+    consul_sd_configs:
+      - server: "localhost:8500"
+        refresh_interval: 10s
+    relabel_configs:
+      - source_labels: [__meta_consul_tags]
+        target_label: tags
+      - source_labels: [__meta_consul_tags]
+        regex: ".*default.*"
+        action: keep
+      - regex: __meta_consul_service_metadata_(.+)
+        action: labelmap
+      - source_labels: [hostname, exporter_port]
+        regex: "(.*);(.*)"
+        replacement: "${1}:${2}"
+        target_label: instance
